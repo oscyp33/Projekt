@@ -77,9 +77,5 @@ incomingByte = Serial.parseInt();
 Serial.println(incomingByte);
 }
 dim = incomingByte;
-//   if((dim>=128) || (dim<=0))
-//    {  delay(1000);
-  
-//      inc*=-1;
-//    }  
+
 }
