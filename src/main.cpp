@@ -1,6 +1,10 @@
 #include <Arduino.h>
 #include <TimerOne.h>
+#include <Servo.h>
 
+Servo serwomechanizm;  //Tworzymy obiekt, dzięki któremu możemy odwołać się do serwa 
+int pozycja = 0; //Aktualna pozycja serwa 0-180
+int zmiana = 6; //Co ile ma się zmieniać pozycja serwa?
 
 
 volatile int i=0;               // Variable to use as a counter
@@ -44,7 +48,9 @@ pinMode(AC_pin, OUTPUT);                          // Set the Triac pin as output
   Timer1.initialize(freqStep);                      // Initialize TimerOne library for the freq we need
   Timer1.attachInterrupt(dim_check, freqStep);   
   Serial.begin(9600);      // open the serial port at 9600 bps: 
-    Serial.print("setup");   
+    Serial.print("setup");  
+    
+    serwomechanizm.attach(9);  //Serwomechanizm podłączony do pinu 9
   // Use the TimerOne Library to attach an interrupt
   // to the function we use to check to see if it is 
   // the right time to fire the triac.  This function 
@@ -77,6 +83,16 @@ incomingByte = Serial.parseInt();
 Serial.println(incomingByte);
 }
 dim = incomingByte;
+
+
+  if (pozycja <270 ) { //Jeśli pozycja mieści się w zakresie
+    serwomechanizm.write(pozycja); //Wykonaj ruch
+  } else { //Jeśli nie, to powrót na początek
+    pozycja = 0;
+  }    
+  
+  pozycja = pozycja + zmiana; //Zwiększenie aktualnej pozycji serwa
+  delay(200); //Opóźnienie dla lepszego efektu     
 
 // test 
 
